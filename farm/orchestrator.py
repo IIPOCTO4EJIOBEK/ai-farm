@@ -377,7 +377,11 @@ class Farm:
                 critic,
                 critic_prompt(domain, subtask=subtask, answer=answer),
                 system=domain.critic_system(),
-                max_tokens=300,
+                # 300 токенов хватало текстовым моделям, но reasoning-модели
+                # (kimi-k3, glm-5.3) тратят бюджет на размышление и при малом
+                # лимите возвращают content=null. Критик отвечает коротко, так
+                # что запас лимита ничего не удлиняет — он только снимает потолок.
+                max_tokens=1200,
             )
         except BackendError:
             return True, "", ""

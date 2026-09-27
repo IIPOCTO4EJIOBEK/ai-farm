@@ -235,7 +235,10 @@ class OllamaBackend:
         except httpx.HTTPError as exc:
             raise BackendError(f"ollama/{self.model}: {exc}") from exc
         payload = response.json()
-        text = (payload.get("message") or {}).get("content", "").strip()
+        # content приходит null у thinking-моделей, когда весь бюджет ушёл на
+        # размышление: `or ""` здесь вместо значения по умолчанию в .get(),
+        # иначе на None падает .strip().
+        text = ((payload.get("message") or {}).get("content") or "").strip()
         if not text:
             # Пустой ответ — не ответ. Такое бывает, когда модель упирается в
             # num_predict на служебном тексте; ферма должна уйти на другой слот,
@@ -599,7 +602,13 @@ class NvidiaBackend:
         choices = data.get("choices") or []
         text = ""
         if choices:
-            text = (choices[0].get("message") or {}).get("content", "").strip()
+            message = choices[0].get("message") or {}
+            # У reasoning-моделей (kimi-k3, glm-5.3) content приходит null, если
+            # бюджет токенов целиком ушёл на размышление. Брать вместо ответа
+            # reasoning_content нельзя — в результат попадёт черновик мыслей.
+            # Пустой ответ честнее: слот признаётся неудачным, и ферма берёт
+            # следующую модель.
+            text = (message.get("content") or "").strip()
         if not text:
             # Пустой ответ — не ответ: иначе ферма запишет прогон как удачный.
             raise BackendError(
