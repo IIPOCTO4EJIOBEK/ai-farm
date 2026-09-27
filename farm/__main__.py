@@ -309,7 +309,7 @@ SUBCOMMANDS = ("run", "pool", "route", "roles", "usage", "digest", "note", "reca
 # Ключи, за которыми идёт значение. Нужны, чтобы отличить значение ключа от
 # начала текста задачи при разборе аргументов ниже.
 VALUE_FLAGS = ("--max-subtasks", "--max-iter", "--max-paid-calls", "--workers", "--domain",
-               "--out", "--preview")
+               "--web-limit", "--out", "--preview")
 
 
 def _extract_output_flags(argv: list[str]) -> list[str]:
