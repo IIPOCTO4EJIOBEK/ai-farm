@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Запуск MCP-сервера живого предпросмотра страниц по stdio.
+#
+# Именно этот файл прописывается в конфиг клиента: так клиенту не нужно знать
+# ни про виртуальное окружение, ни про PYTHONPATH.
+set -euo pipefail
+
+# Каталог проекта НЕ должен называться mcp: он бы перекрыл одноимённый пакет
+# из SDK, и импорт mcp.server внутри сервера упал бы. Поэтому пакет называется
+# mcpserver.
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export PYTHONPATH="$here${PYTHONPATH:+:$PYTHONPATH}"
+
+exec "$here/.venv/bin/python" -m mcpserver.preview_server

@@ -1,0 +1,26 @@
+# Терминал водителя «Дилижанс». Файлы лежат в ~/projects/lime-taxi-app,
+# копировать их сюда не надо.
+
+[project]
+name = "lime-taxi-app"
+path = "~/projects/lime-taxi-app"
+category = "apps"
+description = "PWA-терминал водителя такси «Дилижанс» (26-taxi.ru, Железноводск): живое зеркало данных службы — машины с GPS, заказы, архив поездок, только чтение"
+
+# Что не индексировать. `decoded` — распакованный APK: 7373 файла smali,
+# 73 МБ, для поиска бесполезны. `shots`/`screens` — снимки экрана, у них нет
+# текста. `dumps` — выгрузки из боевой базы: устаревают и только путали бы
+# (живые данные отдаёт tools/live_api.py). Собранные `taxi-*.html` — вывод
+# сборки, их исходник рядом (`*.src.html`): они давали 12 000 фрагментов
+# против 400 у всего остального проекта.
+#
+# `android` — собранный Android-клиент (и его копия `client/android`): там
+# assets/index.html на 696 КБ, это 9880 фрагментов из 13 804 у всего проекта.
+# `tools/vendor` — скачанная библиотека Leaflet (642 фрагмента), её исходник
+# не наш и в поиске по проекту бесполезен.
+exclude = [
+  "decoded", "shots", "screens", "dumps",
+  "src/taxi-app.html", "src/taxi-map.html",
+  "src/last-run.log", "tools/icons.json",
+  "android", "tools/vendor",
+]

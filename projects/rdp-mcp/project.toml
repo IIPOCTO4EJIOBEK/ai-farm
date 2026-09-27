@@ -1,0 +1,7 @@
+# Уже существующий проект: файлы лежат в ~/rdp-mcp, копировать их сюда не надо.
+
+[project]
+name = "rdp-mcp"
+path = "~/rdp-mcp"
+category = "automation"
+description = "MCP-сервер для управления удалённым рабочим столом через RDP"

@@ -1,0 +1,8 @@
+# Документация хоста 10.1.222.71: прокси FCC и Claude Code, локальные модели,
+# железо и драйверы. На эти файлы ссылаются скиллы local-models и machine-layout.
+
+[project]
+name = "host-setup"
+path = "~/projects/kali-10.1.222.71-claude-deepseek"
+category = "docs"
+description = "Устройство хоста 10.1.222.71: SETUP.md (прокси, Claude Code/DeepSeek), LOCAL-AI.md (локальные модели, FCC, замеры), DRIVERS.md (железо, тачпад)"

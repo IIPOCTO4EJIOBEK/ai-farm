@@ -1,0 +1,8 @@
+# Какие ключи где лежат и какие бесплатные модели Zen реально отвечают.
+
+[project]
+name = "opencode-zen-models"
+path = "~/projects/opencode-zen-free-models"
+category = "docs"
+description = "Разбор бесплатных моделей Zen: какие ключи в каком профиле, какие модели отвечают через прокси, почему отваливается аккаунт"
+exclude = ["*.bak"]

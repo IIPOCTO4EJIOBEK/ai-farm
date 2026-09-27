@@ -1,0 +1,8 @@
+# Ранняя документация по терминалу такси: архитектура, черновики экранов, смета.
+# Предшественник lime-taxi-app.
+
+[project]
+name = "taxi-android"
+path = "~/projects/taxi-android"
+category = "docs"
+description = "Черновая документация терминала такси: architecture.md, screens-draft.md, COST.md — ранний этап перед lime-taxi-app"

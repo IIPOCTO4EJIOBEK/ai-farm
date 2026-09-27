@@ -1,0 +1,7 @@
+# Два профиля OpenCode (oc1/oc2): команды, изоляция, грабли, откат.
+
+[project]
+name = "opencode-dual-zen"
+path = "~/projects/opencode-dual-zen"
+category = "docs"
+description = "Комбайн из двух OpenCode с раздельными аккаунтами Zen: профили oc1/oc2, изоляция XDG_DATA_HOME, грабли, проверки и откат"

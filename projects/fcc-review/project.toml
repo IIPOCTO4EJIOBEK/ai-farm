@@ -1,0 +1,7 @@
+# Разбор free-claude-code (FCC) — прокси, через который идут сессии.
+
+[project]
+name = "fcc-review"
+path = "~/projects/free-claude-code-review"
+category = "docs"
+description = "Разбор free-claude-code: как устроен прокси FCC, конфиг, таймауты, фолбэк моделей, админка"
