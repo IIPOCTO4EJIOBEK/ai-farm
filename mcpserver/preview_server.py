@@ -33,6 +33,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 import sys
 import time
@@ -54,6 +55,13 @@ MAX_PAGE_BYTES = 4_000_000
 HERE = Path(__file__).resolve().parent
 PYTHON = Path(sys.executable)
 LOG_FILE = Path.home() / ".local" / "share" / "ai-preview" / "preview.log"
+
+# Chromium, а не Firefox: страница локальная, и прокси ей не нужен, а Firefox
+# с системным прокси спрашивает на каждой странице логин с паролем. Профиль
+# отдельный — если Chromium уже запущен, он просто передал бы адрес живому окну,
+# а флаги запуска (в том числе «без прокси») к нему не применились бы.
+CHROMIUM = shutil.which("chromium") or shutil.which("chromium-browser")
+CHROMIUM_PROFILE = Path.home() / ".local" / "share" / "ai-preview" / "chromium-profile"
 
 
 def _safe_name(name: str) -> str:
@@ -173,17 +181,35 @@ def _publish(name: str, html: str, *, open_browser: bool) -> str:
 def _open(url: str) -> str:
     """Открыть адрес в браузере.
 
-    webbrowser в неинтерактивной сессии может не найти графическую среду,
-    поэтому при неудаче пробуем xdg-open с явным DISPLAY — иначе публикация
-    выглядела бы успешной, а окно не появилось бы.
+    Первым идёт Chromium без прокси — адрес всегда локальный (127.0.0.1), и
+    прокси тут не нужен вовсе. Firefox оставлен последним на случай, если
+    Chromium не установлен. webbrowser в неинтерактивной сессии может не найти
+    графическую среду, поэтому при неудаче пробуем xdg-open с явным DISPLAY —
+    иначе публикация выглядела бы успешной, а окно не появилось бы.
     """
 
+    env = {**os.environ, "DISPLAY": os.environ.get("DISPLAY") or ":0"}
+    if CHROMIUM:
+        try:
+            CHROMIUM_PROFILE.mkdir(parents=True, exist_ok=True)
+            subprocess.Popen(
+                [CHROMIUM, f"--user-data-dir={CHROMIUM_PROFILE}",
+                 "--no-proxy-server", "--no-first-run",
+                 "--no-default-browser-check", url],
+                env=env,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                stdin=subprocess.DEVNULL,
+                start_new_session=True,
+            )
+            return "открыт через chromium (без прокси)"
+        except OSError:
+            pass
     try:
         if webbrowser.open(url):
             return "открыт"
     except Exception:  # noqa: BLE001 — причин много, важен итог
         pass
-    env = {**os.environ, "DISPLAY": os.environ.get("DISPLAY") or ":0"}
     for opener in ("xdg-open", "firefox"):
         try:
             subprocess.Popen(
